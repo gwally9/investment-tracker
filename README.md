@@ -1,25 +1,17 @@
 # Track Investments
 
-## Requires:
-`pip install yfinance` 
+Simple Portfolio tracker - shows statistics of your investments near real-time
 
-or
-
-`pip3 install yfinance`
-
-2nd version
+### Requires:
 `pip3 install flask yfinance`
 
-
+#### Original colors in code:
+```
 line 401 --             background: #fefef8;
-
- line 321 --           color: #e4e9efff;
-            background: #d6d3a3;
+line 321 --           color: #e4e9efff; 
+background: #d6d3a3;
 line 350 --         .gain { color: #27ae60; }
+```
 
 
 
-#e7f9bf
-
-
-#0e773a
