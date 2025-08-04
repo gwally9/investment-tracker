@@ -7,6 +7,7 @@ Simple Portfolio tracker - shows statistics of your investments near real-time
 
 
 ### Sample Visual
+
 <src img="https://github.com/gwally9/investment-tracker/blob/main/Example_Dashboard.png">
 
 
