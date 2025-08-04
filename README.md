@@ -5,6 +5,13 @@ Simple Portfolio tracker - shows statistics of your investments near real-time
 ### Requires:
 `pip3 install flask yfinance`
 
+
+### Sample Visual
+<src img="https://github.com/gwally9/investment-tracker/blob/main/Example_Dashboard.png">
+
+
+
+
 #### Original colors in code:
 ```
 line 401 --             background: #fefef8;
