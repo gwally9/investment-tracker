@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "description": "Apple Common",
+    "ticker": "AAPL",
+    "quantity": 5.01,
+    "purchase_price": 199.58,
+    "fees": 0.0,
+    "date_added": "2025-08-03T20:32:25.696664"
+  },
+  {
+    "id": 2,
+    "description": "Grayscale Bitcoin Mini",
+    "ticker": "BTC",
+    "quantity": 12.025,
+    "purchase_price": 41.58,
+    "fees": 0.0,
+    "date_added": "2025-08-03T20:33:13.620998"
+  },
+  {
+    "id": 3,
+    "description": "BITWISE FUNDS TRUST MSTR",
+    "ticker": "IMST",
+    "quantity": 16.139,
+    "purchase_price": 49.57,
+    "fees": 0.0,
+    "date_added": "2025-08-03T20:34:01.555863"
+  },
+  {
+    "id": 4,
+    "description": "Microstrategy common",
+    "ticker": "MSTR",
+    "quantity": 4.036,
+    "purchase_price": 422.84,
+    "fees": 0.0,
+    "date_added": "2025-08-03T20:34:55.185105"
+  },
+  {
+    "id": 5,
+    "description": "R II Yieldmax MSTR OP",
+    "ticker": "MSTY",
+    "quantity": 20.491,
+    "purchase_price": 24.4,
+    "fees": 0.0,
+    "date_added": "2025-08-03T20:36:10.751006"
+  },
+  {
+    "id": 6,
+    "description": "NVidia",
+    "ticker": "NVDA",
+    "quantity": 10.001,
+    "purchase_price": 127.16,
+    "fees": 0.0,
+    "date_added": "2025-08-03T20:36:43.771418"
+  },
+  {
+    "id": 7,
+    "description": "Sprott Gold Trust",
+    "ticker": "PHYS",
+    "quantity": 39.557,
+    "purchase_price": 25.28,
+    "fees": 0.0,
+    "date_added": "2025-08-03T20:37:18.758508"
+  },
+  {
+    "id": 8,
+    "description": "Palantir Tech",
+    "ticker": "PLTR",
+    "quantity": 5.0,
+    "purchase_price": 152.38,
+    "fees": 0.0,
+    "date_added": "2025-08-03T20:38:05.665830"
+  },
+  {
+    "id": 9,
+    "description": "Microstrategy INC Ser A ",
+    "ticker": "STRF",
+    "quantity": 4.0,
+    "purchase_price": 117.95,
+    "fees": 0.0,
+    "date_added": "2025-08-03T20:38:38.207834"
+  },
+  {
+    "id": 10,
+    "description": "Taiwan Semiconductor",
+    "ticker": "TSM",
+    "quantity": 6.016,
+    "purchase_price": 195.9,
+    "fees": 0.0,
+    "date_added": "2025-08-03T20:39:02.935719"
+  }
+]
