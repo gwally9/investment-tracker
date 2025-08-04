@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to bottom, #1a365d, #0f1419);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #FFFFFF;
+        }
+        
+        .summary-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .summary-item {
+            text-align: center;
+        }
+        
+        .summary-item h3 {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .summary-item .value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .gain { color: #0e773a; }
+        .loss { color: #e74c3c; }
+        
+        .controls {
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-success {
+            background-color: #27ae60;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #229954;
+        }
+        
+        .btn-danger {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .portfolio-table {
+            background: #e6e6e6;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        th {
+            background-color: #34495e;
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .text-right {
+            text-align: right;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+        
+        .status {
+            background: #3498db;
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .status.success {
+            background: #27ae60;
+        }
+        
+        .status.error {
+            background: #e74c3c;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            table {
+                font-size: 12px;
+            }
+            
+            th, td {
+                padding: 8px 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Financial Portfolio Tracker</h1>
+        
+        <div id="status" class="status"></div>
+        
+        <div class="summary-section">
+            <div class="summary-item">
+                <h3>Total Investment</h3>
+                <div id="totalInvestment" class="value">$0.00</div>
+            </div>
+            <div class="summary-item">
+                <h3>Current Value</h3>
+                <div id="currentValue" class="value">$0.00</div>
+            </div>
+            <div class="summary-item">
+                <h3>Total P&L</h3>
+                <div id="totalPL" class="value">$0.00</div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="btn-primary" onclick="showAddModal()">Add Position</button>
+            <button class="btn-success" onclick="refreshPrices()">Refresh Prices</button>
+            <button class="btn-primary" onclick="exportData()">Export CSV</button>
+        </div>
+        
+        <div class="portfolio-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th>Ticker</th>
+                        <th class="text-right">Quantity</th>
+                        <th class="text-right">Purchase Price</th>
+                        <th class="text-right">Total Cost</th>
+                        <th class="text-right">Fees</th>
+                        <th class="text-right">Current Price</th>
+                        <th class="text-right">Current Value</th>
+                        <th class="text-right">P&L</th>
+                        <th class="text-right">P&L %</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="portfolioTableBody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Modal for Add/Edit Position -->
+    <div id="positionModal" class="modal">
+        <div class="modal-content">
+            <h3 id="modalTitle">Add Position</h3>
+            <form id="positionForm">
+                <div class="form-group">
+                    <label for="description">Description:</label>
+                    <input type="text" id="description" name="description" required>
+                </div>
+                <div class="form-group">
+                    <label for="ticker">Ticker Symbol:</label>
+                    <input type="text" id="ticker" name="ticker" required style="text-transform: uppercase;">
+                </div>
+                <div class="form-group">
+                    <label for="quantity">Quantity:</label>
+                    <input type="number" id="quantity" name="quantity" step="any" required>
+                </div>
+                <div class="form-group">
+                    <label for="purchase_price">Purchase Price ($):</label>
+                    <input type="number" id="purchase_price" name="purchase_price" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="fees">Fees ($):</label>
+                    <input type="number" id="fees" name="fees" step="0.01" value="0">
+                </div>
+                <div class="form-actions">
+                    <button type="button" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        let currentEditId = null;
+        
+        // Load portfolio data on page load
+        window.onload = function() {
+            loadPortfolio();
+        };
+        
+        function loadPortfolio() {
+            fetch('/api/portfolio')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        updateSummary(data.summary);
+                        updateTable(data.portfolio);
+                    } else {
+                        showStatus('Error loading portfolio: ' + data.message, 'error');
+                    }
+                })
+                .catch(error => {
+                    showStatus('Error: ' + error.message, 'error');
+                });
+        }
+        
+        function updateSummary(summary) {
+            document.getElementById('totalInvestment').textContent = formatCurrency(summary.total_investment);
+            document.getElementById('currentValue').textContent = formatCurrency(summary.total_current_value);
+            
+            const plElement = document.getElementById('totalPL');
+            const pl = summary.total_pl;
+            const plPercent = summary.total_pl_percent;
+            
+            if (pl >= 0) {
+                plElement.textContent = `${formatCurrency(pl)} (+${plPercent.toFixed(2)}%)`;
+                plElement.className = 'value gain';
+            } else {
+                plElement.textContent = `(${formatCurrency(Math.abs(pl))}) (${plPercent.toFixed(2)}%)`;
+                plElement.className = 'value loss';
+            }
+        }
+        
+        function updateTable(portfolio) {
+            const tbody = document.getElementById('portfolioTableBody');
+            tbody.innerHTML = '';
+            
+            portfolio.forEach(position => {
+                const row = document.createElement('tr');
+                
+                const pl = position.pl;
+                const plClass = pl >= 0 ? 'gain' : 'loss';
+                const plText = pl !== null ? (pl >= 0 ? formatCurrency(pl) : `(${formatCurrency(Math.abs(pl))})`) : 'N/A';
+                const plPercentText = position.pl_percent !== null ? `${position.pl_percent >= 0 ? '+' : ''}${position.pl_percent.toFixed(2)}%` : 'N/A';
+                
+                row.innerHTML = `
+                    <td>${position.description}</td>
+                    <td>${position.ticker}</td>
+                    <td class="text-right">${position.quantity.toFixed(0)}</td>
+                    <td class="text-right">${formatCurrency(position.purchase_price)}</td>
+                    <td class="text-right">${formatCurrency(position.total_cost)}</td>
+                    <td class="text-right">${formatCurrency(position.fees)}</td>
+                    <td class="text-right">${position.current_price ? formatCurrency(position.current_price) : 'N/A'}</td>
+                    <td class="text-right">${position.current_value ? formatCurrency(position.current_value) : 'N/A'}</td>
+                    <td class="text-right ${plClass}">${plText}</td>
+                    <td class="text-right ${plClass}">${plPercentText}</td>
+                    <td>
+                        <button class="btn-primary" onclick="editPosition(${position.id})">Edit</button>
+                        <button class="btn-danger" onclick="deletePosition(${position.id})">Delete</button>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+        
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD'
+            }).format(amount);
+        }
+        
+        function showStatus(message, type = 'info') {
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = message;
+            statusEl.className = `status ${type}`;
+            statusEl.style.display = 'block';
+            
+            setTimeout(() => {
+                statusEl.style.display = 'none';
+            }, 5000);
+        }
+        
+        function showAddModal() {
+            currentEditId = null;
+            document.getElementById('modalTitle').textContent = 'Add Position';
+            document.getElementById('positionForm').reset();
+            document.getElementById('positionModal').style.display = 'block';
+        }
+        
+        function editPosition(id) {
+            // Find position data
+            fetch('/api/portfolio')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const position = data.portfolio.find(p => p.id === id);
+                        if (position) {
+                            currentEditId = id;
+                            document.getElementById('modalTitle').textContent = 'Edit Position';
+                            document.getElementById('description').value = position.description;
+                            document.getElementById('ticker').value = position.ticker;
+                            document.getElementById('quantity').value = position.quantity;
+                            document.getElementById('purchase_price').value = position.purchase_price;
+                            document.getElementById('fees').value = position.fees;
+                            document.getElementById('positionModal').style.display = 'block';
+                        }
+                    }
+                });
+        }
+        
+        function deletePosition(id) {
+            if (confirm('Are you sure you want to delete this position?')) {
+                fetch(`/api/position/${id}`, { method: 'DELETE' })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            showStatus(data.message, 'success');
+                            loadPortfolio();
+                        } else {
+                            showStatus('Error: ' + data.message, 'error');
+                        }
+                    });
+            }
+        }
+        
+        function closeModal() {
+            document.getElementById('positionModal').style.display = 'none';
+        }
+        
+        function refreshPrices() {
+            showStatus('Refreshing prices...', 'info');
+            fetch('/api/refresh-prices', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showStatus(data.message, 'success');
+                        loadPortfolio();
+                    } else {
+                        showStatus('Error: ' + data.message, 'error');
+                    }
+                });
+        }
+        
+        function exportData() {
+            window.location.href = '/api/export';
+        }
+        
+        // Handle form submission
+        document.getElementById('positionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+            
+            const url = currentEditId ? `/api/position/${currentEditId}` : '/api/position';
+            const method = currentEditId ? 'PUT' : 'POST';
+            
+            fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showStatus(data.message, 'success');
+                    closeModal();
+                    loadPortfolio();
+                } else {
+                    showStatus('Error: ' + data.message, 'error');
+                }
+            });
+        });
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('positionModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>
